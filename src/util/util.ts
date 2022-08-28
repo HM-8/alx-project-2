@@ -1,5 +1,5 @@
 import fs from "fs";
-import Jimp = require("jimp");
+import Jimp from "jimp";
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -9,22 +9,27 @@ import Jimp = require("jimp");
 // RETURNS
 //    an absolute path to a filtered image locally saved file
 export async function filterImageFromURL(inputURL: string): Promise<string> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const photo = await Jimp.read(inputURL);
-      const outpath =
-        "/tmp/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
-      await photo
-        .resize(256, 256) // resize
-        .quality(60) // set JPEG quality
-        .greyscale() // set greyscale
-        .write(__dirname + outpath, (img) => {
-          resolve(__dirname + outpath);
-        });
-    } catch (error) {
-      reject(error);
-    }
-  });
+	return new Promise(async (resolve, reject) => {
+		try {
+			await Jimp.read(inputURL)
+				.then((file) => {
+					const outpath =
+						"/tmp/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
+					file
+						.resize(256, 256) // resize
+						.quality(60) // set JPEG quality
+						.greyscale() // set greyscale
+						.write(__dirname + outpath, (img) => {
+							resolve(__dirname + outpath);
+						});
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		} catch (error) {
+			reject(error);
+		}
+	});
 }
 
 // deleteLocalFiles
@@ -33,7 +38,18 @@ export async function filterImageFromURL(inputURL: string): Promise<string> {
 // INPUTS
 //    files: Array<string> an array of absolute paths to files
 export async function deleteLocalFiles(files: Array<string>) {
-  for (let file of files) {
-    fs.unlinkSync(file);
-  }
+	for (let file of files) {
+		fs.unlinkSync(file);
+	}
+}
+
+// a helper function to validate if the url sent as a query is a correct url
+export function isValidUrl(query_url: string) {
+	var url: URL;
+	try {
+		url = new URL(query_url);
+	} catch (e) {
+		return false;
+	}
+	return url.protocol === "http:" || url.protocol === "https:";
 }
