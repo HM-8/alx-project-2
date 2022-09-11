@@ -4,7 +4,7 @@ import { IndexRouter } from "./routes/index.router";
 
 (async () => {
 	const app = express();
-	const port = process.env.PORT || 8000;
+	const port = process.env.PORT || 8082;
 	app.use(bodyParser.json());
 	app.use('/api/v0/', IndexRouter)
 
