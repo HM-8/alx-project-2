@@ -1,4 +1,4 @@
-# Udagram Image Filtering Microservice
+# Image Filtering Microservice
 
 Elastic Beanstalk Deployment (EB_URL): http://udagram-filter-images-dev.us-east-1.elasticbeanstalk.com/
 
